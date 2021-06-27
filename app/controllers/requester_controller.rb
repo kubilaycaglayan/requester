@@ -7,13 +7,12 @@ class RequesterController < ApplicationController
     if !is_authorized
       render status: 400
     else
-      path = requester_params[:path]
-      path = insert_forward_slash path
+      path = insert_forward_slash request.fullpath.dup
 
       response = HTTParty.get(path)
 
       if (response.code == 200)
-        render json: response
+        render json: response.parsed_response
       else
         render plain: "Error in request", status: response.code
       end
@@ -38,8 +37,8 @@ class RequesterController < ApplicationController
   end
 
   def insert_forward_slash path
-    index_of_fs = path.index(/\//)
+    index_of_fs = path[1, path.length].index(/\//)
 
-    path.insert(index_of_fs, "/")
+    path[1, path.length].insert(index_of_fs, "/")
   end
 end
