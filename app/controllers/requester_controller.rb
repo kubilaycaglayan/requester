@@ -19,6 +19,10 @@ class RequesterController < ApplicationController
     end
   end
 
+  def wake
+    render plain: 'up'
+  end
+
   private
 
   def make_a_request(path, request)
